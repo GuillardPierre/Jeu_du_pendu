@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pendu</title>
+    <script src="Pendu.js" defer></script>
+    <link rel="stylesheet" href="pendu.css" />
+  </head>
+
+  <header>
+    <h1>Jeu du pendu</h1>
+  </header>
+
+  <body>
+    <div class="container">
+      <div id="motADeviner"></div>
+
+      <div id="imageDuJeu">
+        <img src="images/hangman.png" width="50%" alt="pendu" />
+      </div>
+    </div>
+
+    <div id="zoneSaisie">
+      <input
+        type="text"
+        id="inputEcriture"
+        name="inputEcriture"
+        placeholder="Propose une lettre"
+      />
+      <button id="btnValiderMot">Valider</button>
+    </div>
+
+    <div class="container2">
+      <div id="zoneReponseProposition">
+        Il te reste <span></span> chance(s) sur 10
+      </div>
+
+      <div id="zoneLettreDejaProposees"></div>
+    </div>
+  </body>
+
+  <footer>
+    <p>Projet réalisé par Pierre Guillard</p>
+    <p>Débuté le 03/08/2023</p>
+  </footer>
+</html>
