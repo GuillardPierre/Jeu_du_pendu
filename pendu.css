@@ -45,3 +45,22 @@ footer {
   justify-content: center;
   font-size: 25px;
 }
+
+.clavierLigne {
+  display: flex;
+  justify-content: center;
+}
+
+.boiteLettre {
+  width: 68px;
+  height: 80px;
+  border: 2px solid;
+  border-radius: 10px;
+  margin: 1px;
+}
+
+.boiteLettre img {
+  width: 64px;
+  height: 64px;
+  padding: 7px 2px;
+}
