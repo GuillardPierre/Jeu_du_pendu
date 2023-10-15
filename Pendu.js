@@ -1,5 +1,4 @@
-const btnValiderMot = document.getElementById("btnValiderMot");
-const zoneSaisie = document.getElementById("inputEcriture");
+const zoneMotADeviner2 = document.querySelector(".motADeviner2");
 const zoneMotADeviner = document.getElementById("motADeviner");
 const zoneEssaiRestant = document.querySelector("#zoneReponseProposition span");
 const zoneImage = document.querySelector("#imageDuJeu");
@@ -7,13 +6,10 @@ const btnsLettre = document.querySelectorAll(".boiteLettre");
 const zoneReponseProposition = document.getElementById(
   "zoneReponseProposition"
 );
-const zoneLettreDejaProposees = document.getElementById(
-  "zoneLettreDejaProposees"
-);
 let lettreProposee = [];
 let numeroImg = 0;
 let essai = 11;
-
+zoneEssaiRestant.innerHTML = essai;
 majImage();
 
 function affichageMotCache(mot) {
@@ -23,6 +19,15 @@ function affichageMotCache(mot) {
     motVide = motVide + lettreAAjouter;
   }
   return motVide;
+}
+
+function affichageMotCache2(mot) {
+  for (let i = 0; i < mot.length; i++) {
+    const newDiv = document.createElement("div");
+    newDiv.setAttribute("class", "lettreVide");
+    newDiv.setAttribute("id", i);
+    zoneMotADeviner2.appendChild(newDiv);
+  }
 }
 
 function ajouterEspace(mot) {
@@ -37,13 +42,23 @@ function majImage() {
   img.setAttribute("src", `images/${numeroImg}.png`);
   zoneImage.appendChild(img);
 }
+function majLettreUnique(position, lettre) {
+  let lettreTrouvee = document.getElementById(position);
+  console.log(lettreTrouvee.children);
+  if (lettreTrouvee.children.length > 0) {
+    lettreTrouvee.removeChild(lettreTrouvee.firstElementChild);
+  }
+  lettreTrouvee.style.border.display = "none";
+  let imgAAjouter = document.createElement("img");
+  imgAAjouter.setAttribute("src", `images/${lettre}.png`);
+  lettreTrouvee.appendChild(imgAAjouter);
+}
 
 function proposition(mot) {
+  affichageMotCache2(mot);
   let motADeviner = affichageMotCache(mot);
   motAvecEspace = ajouterEspace(mot);
   console.log(motAvecEspace);
-  zoneMotADeviner.innerHTML = motADeviner;
-  zoneEssaiRestant.innerHTML = essai;
 
   btnsLettre.forEach((image) => {
     image.addEventListener("click", (e) => {
@@ -58,14 +73,20 @@ function proposition(mot) {
             choixJoueur +
             motADeviner.substring(i * 2 + 1); // Permet de remplacer le caractère " _ " par le caractère trouvé par l'utilisateur. Mais je comprends pas bien cette deuxième partie."
           console.log(motADeviner);
-          zoneMotADeviner.innerHTML = motADeviner;
+          let lettreTrouvee = document.getElementById(i);
+          lettreTrouvee = lettreTrouvee.id;
+          majLettreUnique(lettreTrouvee, mot[i]);
+
+          console.log(lettreTrouvee);
           lettrePresente = true;
+          console.log(lettrePresente);
+          e.target.style.backgroundColor = "green";
         }
       }
       if (lettrePresente === false) {
+        console.log(lettrePresente);
         lettreProposee.push(" " + choixJoueur);
-        zoneLettreDejaProposees.innerHTML = lettreProposee;
-        zoneLettreDejaProposees.style.background = "red";
+        e.target.style.backgroundColor = "red";
         essai--;
         numeroImg++;
         majImage();
@@ -79,4 +100,4 @@ function proposition(mot) {
     });
   });
 }
-proposition("QUOICOUBEH");
+proposition("SAPERLIPOPETTE");
