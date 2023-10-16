@@ -1,15 +1,13 @@
 const zoneMotADeviner2 = document.querySelector(".motADeviner2");
 const zoneMotADeviner = document.getElementById("motADeviner");
-const zoneEssaiRestant = document.querySelector("#zoneReponseProposition span");
 const zoneImage = document.querySelector("#imageDuJeu");
-const btnsLettre = document.querySelectorAll(".boiteLettre");
+const btnsLettre = document.querySelectorAll(".boiteLettre img");
 const zoneReponseProposition = document.getElementById(
   "zoneReponseProposition"
 );
 let lettreProposee = [];
 let numeroImg = 0;
 let essai = 11;
-zoneEssaiRestant.innerHTML = essai;
 majImage();
 
 function affichageMotCache(mot) {
@@ -37,10 +35,16 @@ function ajouterEspace(mot) {
 }
 
 function majImage() {
-  zoneImage.removeChild(zoneImage.firstElementChild);
-  let img = document.createElement("img");
-  img.setAttribute("src", `images/${numeroImg}.png`);
-  zoneImage.appendChild(img);
+  if (zoneImage.children.length > 0) {
+    zoneImage.removeChild(zoneImage.firstElementChild);
+    let img = document.createElement("img");
+    img.setAttribute("src", `images/${numeroImg}.png`);
+    zoneImage.appendChild(img);
+  } else {
+    let img = document.createElement("img");
+    img.setAttribute("src", `images/${numeroImg}.png`);
+    zoneImage.appendChild(img);
+  }
 }
 function majLettreUnique(position, lettre) {
   let lettreTrouvee = document.getElementById(position);
@@ -62,6 +66,7 @@ function proposition(mot) {
 
   btnsLettre.forEach((image) => {
     image.addEventListener("click", (e) => {
+      console.log(e);
       let choixJoueur = e.target.classList[0];
       let lettrePresente = false;
       choixJoueur = choixJoueur.toUpperCase();
@@ -90,12 +95,11 @@ function proposition(mot) {
         essai--;
         numeroImg++;
         majImage();
-        zoneEssaiRestant.innerHTML = essai;
       }
       if (motADeviner === motAvecEspace) {
-        zoneReponseProposition.textContent = "Bravo 🎉🎉🎉";
+        alert("Bravo 🎉🎉🎉");
       } else if (essai === 0) {
-        zoneReponseProposition.textContent = "C'est perdu 😭😭😭";
+        alert("C'est perdu 😭😭😭");
       }
     });
   });

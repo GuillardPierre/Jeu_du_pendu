@@ -4,17 +4,27 @@
 
 .motADeviner2 {
   display: flex;
+  margin-bottom: 20px;
 }
 
 .motADeviner2 img {
   width: 64px;
   height: 64px;
 }
+
+#imageDuJeu {
+  width: 210px;
+  height: 210px;
+  border: 2px solid;
+  border-radius: 10px;
+  margin: auto;
+  margin-bottom: 20px;
+}
+
 #imageDuJeu img {
   width: 200px;
   display: block;
-  padding: auto;
-  margin: -120px 0px 0px 40px;
+  padding: 5px;
 }
 
 .container {
