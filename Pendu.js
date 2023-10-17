@@ -1,25 +1,58 @@
 const zoneMotADeviner2 = document.querySelector(".motADeviner2");
-const zoneMotADeviner = document.getElementById("motADeviner");
 const zoneImage = document.querySelector("#imageDuJeu");
 const btnsLettre = document.querySelectorAll(".boiteLettre img");
 const zoneReponseProposition = document.getElementById(
   "zoneReponseProposition"
 );
+const popup = document.querySelector(".popup");
+const zoneResultat = document.querySelector(".resultat");
+const btnPopup = document.querySelector(".nouveauMot");
+let nombre;
+let motADeviner = "";
+let mot = "";
 let lettreProposee = [];
 let numeroImg = 0;
 let essai = 11;
-majImage();
+let listeMots = [
+  "PARAPLUIE",
+  "GRENOUILLE",
+  "CHOCOLAT",
+  "ORDINATEUR",
+  "MONSTRE",
+  "GUITARE",
+  "PAPILLON",
+  "COCCINELLE",
+  "SOURIS",
+  "ETOILE",
+  "CROISSANT",
+  "VOYAGE",
+  "CASCADE",
+  "TRAMPOLINE",
+  "BAGUETTE",
+  "FLEUR",
+  "MONTAGNE",
+  "BOUGIE",
+  "CHAUSSURE",
+];
+
+function nbrHasard(liste) {
+  //pour générer un nombre aléatoire dans la liste de mots de départ
+  return Math.floor(Math.random() * liste.length);
+}
 
 function affichageMotCache(mot) {
+  //Pour suivre l'avancée des lettres trouvées (pas visible par l'utilisateur)
   let motVide = "";
   for (let i = 0; i < mot.length; i++) {
-    let lettreAAjouter = "_ ";
+    let lettreAAjouter = "_";
     motVide = motVide + lettreAAjouter;
   }
   return motVide;
 }
 
 function affichageMotCache2(mot) {
+  // ¨Pour créer les cases où iront se mettre les futurs lettres"
+  zoneMotADeviner2.innerHTML = "";
   for (let i = 0; i < mot.length; i++) {
     const newDiv = document.createElement("div");
     newDiv.setAttribute("class", "lettreVide");
@@ -28,13 +61,8 @@ function affichageMotCache2(mot) {
   }
 }
 
-function ajouterEspace(mot) {
-  let motAvecEspace = mot;
-  motAvecEspace = motAvecEspace.split("").join(" ") + " "; //Permet de rajouter des espaces entre chaque lettre du mot donné et un à la fin.
-  return motAvecEspace;
-}
-
 function majImage() {
+  // pour mettre à jour l'image du pendu pour chaque erreur.
   if (zoneImage.children.length > 0) {
     zoneImage.removeChild(zoneImage.firstElementChild);
     let img = document.createElement("img");
@@ -46,9 +74,10 @@ function majImage() {
     zoneImage.appendChild(img);
   }
 }
+
 function majLettreUnique(position, lettre) {
+  // pour rajouter les lettres trouvées sur le mot à deviner.
   let lettreTrouvee = document.getElementById(position);
-  console.log(lettreTrouvee.children);
   if (lettreTrouvee.children.length > 0) {
     lettreTrouvee.removeChild(lettreTrouvee.firstElementChild);
   }
@@ -60,48 +89,76 @@ function majLettreUnique(position, lettre) {
 
 function proposition(mot) {
   affichageMotCache2(mot);
-  let motADeviner = affichageMotCache(mot);
-  motAvecEspace = ajouterEspace(mot);
-  console.log(motAvecEspace);
-
-  btnsLettre.forEach((image) => {
-    image.addEventListener("click", (e) => {
-      console.log(e);
-      let choixJoueur = e.target.classList[0];
-      let lettrePresente = false;
-      choixJoueur = choixJoueur.toUpperCase();
-      console.log(choixJoueur);
-      for (let i = 0; i < mot.length; i++) {
-        if (choixJoueur === mot[i]) {
-          motADeviner =
-            motADeviner.substring(0, i * 2) +
-            choixJoueur +
-            motADeviner.substring(i * 2 + 1); // Permet de remplacer le caractère " _ " par le caractère trouvé par l'utilisateur. Mais je comprends pas bien cette deuxième partie."
-          console.log(motADeviner);
-          let lettreTrouvee = document.getElementById(i);
-          lettreTrouvee = lettreTrouvee.id;
-          majLettreUnique(lettreTrouvee, mot[i]);
-
-          console.log(lettreTrouvee);
-          lettrePresente = true;
-          console.log(lettrePresente);
-          e.target.style.backgroundColor = "green";
-        }
-      }
-      if (lettrePresente === false) {
-        console.log(lettrePresente);
-        lettreProposee.push(" " + choixJoueur);
-        e.target.style.backgroundColor = "red";
-        essai--;
-        numeroImg++;
-        majImage();
-      }
-      if (motADeviner === motAvecEspace) {
-        alert("Bravo 🎉🎉🎉");
-      } else if (essai === 0) {
-        alert("C'est perdu 😭😭😭");
-      }
-    });
-  });
+  motADeviner = affichageMotCache(mot);
 }
-proposition("SAPERLIPOPETTE");
+
+btnsLettre.forEach((image) => {
+  image.addEventListener("click", (e) => {
+    let choixJoueur = e.target.classList[0];
+    let lettrePresente = false;
+    choixJoueur = choixJoueur.toUpperCase();
+    for (let i = 0; i < mot.length; i++) {
+      if (choixJoueur === mot[i]) {
+        // si lettre cliquée et trouvée dans le mot
+        let lettreTrouvee = document.getElementById(i);
+        lettreTrouvee = lettreTrouvee.id;
+        majLettreUnique(lettreTrouvee, mot[i]);
+        motADeviner =
+          motADeviner.substring(0, i) +
+          choixJoueur +
+          motADeviner.substring(i + 1);
+        lettrePresente = true;
+        e.target.style.backgroundColor = "green";
+      }
+    }
+    if (lettrePresente === false) {
+      // si lettre cliquée mais pas trouvée dans le mot
+      lettreProposee.push(" " + choixJoueur);
+      e.target.style.backgroundColor = "red";
+      essai--;
+      numeroImg++;
+      majImage();
+    }
+    if (motADeviner === mot) {
+      const txt = `🎉🎉🎉 Bravo ! Tu as trouvé en ${11 - essai} essais!`;
+      zoneResultat.innerHTML = txt;
+      popup.style.display = "block";
+      listeMots.splice(nombre, 1);
+      btnPopup.addEventListener("click", () => {
+        generationMot();
+      });
+    } else if (essai === 0) {
+      const txt = `C'est perdu 😭😭😭`;
+      zoneResultat.innerHTML = txt;
+      popup.style.display = "block";
+      listeMots.splice(nombre, 1);
+      btnPopup.addEventListener("click", () => {
+        generationMot();
+      });
+    }
+  });
+});
+
+function generationMot() {
+  if (listeMots.length === 0) {
+    const txt = `Félicitations tu as trouvé tous les mots !`;
+    zoneResultat.innerHTML = txt;
+    popup.style.display = "block";
+  } else {
+    popup.style.display = "none";
+    motADeviner = "";
+    lettreProposee = [];
+    numeroImg = 0;
+    essai = 11;
+    majImage();
+    btnsLettre.forEach((element) => {
+      element.style.backgroundColor = "white";
+    });
+    nombre = nbrHasard(listeMots);
+    mot = listeMots[nombre];
+    proposition(listeMots[nombre]);
+  }
+}
+
+generationMot();
+majImage();
