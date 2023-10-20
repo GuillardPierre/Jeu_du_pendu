@@ -33,6 +33,11 @@ let listeMots = [
   "MONTAGNE",
   "BOUGIE",
   "CHAUSSURE",
+  "LYNX",
+  "PYJAMA",
+  "LYCÉE",
+  "GYMNASIUM",
+  "MYSTERE",
 ];
 
 function nbrHasard(liste) {
@@ -128,7 +133,7 @@ btnsLettre.forEach((image) => {
         generationMot();
       });
     } else if (essai === 0) {
-      const txt = `C'est perdu 😭😭😭`;
+      const txt = `C'est perdu 😭😭😭 le mot était ${mot}`;
       zoneResultat.innerHTML = txt;
       popup.style.display = "block";
       listeMots.splice(nombre, 1);
